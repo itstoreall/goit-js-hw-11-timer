@@ -21,6 +21,70 @@
  * 
  */
 
+class CountdownTimer {
+   constructor(initialValues) {
+      this.selector = initialValues.selector;
+      this._targetDate = initialValues.targetDate;
+
+      this.refs = {
+         days: document.querySelector('span[data-value="days"]'),
+         hours: document.querySelector('span[data-value="hours"]'),
+         mins: document.querySelector('span[data-value="mins"]'),
+         secs: document.querySelector('span[data-value="secs"]'),
+      };
+   }
+
+   start() {
+      setInterval(() => {
+         
+         // Текущее время (мс)
+         const currentTime = Date.now();
+
+         // Разница во времени
+         const delta = this._targetDate.getTime() - currentTime;
+
+         this.updateClockFace(delta);
+      }, 1000);
+   }
+
+   updateClockFace(time) {
+   const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+   this.refs.days.textContent = `${days}`;
+
+   const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+   this.refs.hours.textContent = `${hours}`;
+
+   const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+   this.refs.mins.textContent = `${mins}`;
+
+   const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+   this.refs.secs.textContent = `${secs}`;
+   }
+   
+   pad(value) {
+   return String(value).padStart(2, "0");
+   }
+
+   get targetDate() {
+      return this._targetDate;
+   }
+
+   set targetDate(newDate) {
+      this._targetDate = newDate;
+   }
+};
+
+const timer = new CountdownTimer({
+  selector: '#timer-1',
+  targetDate: new Date('Jun 17, 2019'),
+});
+
+timer.start()
+
+timer.targetDate = new Date("Jan 01, 2021");
+
+/* 
+
 const refs = {
    days: document.querySelector('span[data-value="days"]'),
    hours: document.querySelector('span[data-value="hours"]'),
@@ -69,3 +133,5 @@ function updateClockFace(time) {
 function pad(value) {
    return String(value).padStart(2, "0");
 };
+
+*/
